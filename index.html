@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guest Review Hub</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&amp;family=Source+Sans+3:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+  <style>
+    .font-display { font-family: 'Playfair Display', serif; }
+    .font-body { font-family: 'Source Sans 3', sans-serif; }
+    
+    .review-card {
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .review-card:hover {
+      transform: translateY(-8px) scale(1.02);
+    }
+    
+    .review-card:hover .card-glow {
+      opacity: 1;
+    }
+    
+    .card-glow {
+      position: absolute;
+      inset: -2px;
+      border-radius: 1.5rem;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      z-index: -1;
+    }
+    
+    .google-glow {
+      background: linear-gradient(135deg, #4285F4, #34A853, #FBBC05, #EA4335);
+      filter: blur(12px);
+    }
+    
+    .tripadvisor-glow {
+      background: linear-gradient(135deg, #00AF87, #34E0A1);
+      filter: blur(12px);
+    }
+    
+    .floating-star {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    .floating-star:nth-child(2) { animation-delay: -2s; }
+    .floating-star:nth-child(3) { animation-delay: -4s; }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(10deg); }
+    }
+    
+    @keyframes pulse-soft {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+    
+    .pulse-soft {
+      animation: pulse-soft 3s ease-in-out infinite;
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full font-body">
+  <div id="app-wrapper" class="min-h-full w-full overflow-auto relative" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);"><!-- Decorative floating stars -->
+   <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <svg class="floating-star absolute top-20 left-10 w-8 h-8 text-amber-400/30" viewbox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+    </svg>
+    <svg class="floating-star absolute top-40 right-20 w-6 h-6 text-amber-400/20" viewbox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+    </svg>
+    <svg class="floating-star absolute bottom-32 left-1/4 w-10 h-10 text-amber-400/25" viewbox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+    </svg>
+   </div>
+   <div class="relative z-10 flex flex-col items-center justify-center min-h-full px-6 py-12"><!-- Header Section -->
+    <div class="text-center mb-12 max-w-2xl"><img id="logo" src="https://raw.githubusercontent.com/Regentaresortsakleshpur/regenta-logo/refs/heads/main/logo.png.png" alt="Regenta Resort Sakleshpur" class="h-24 mx-auto mb-6 object-contain" loading="lazy" onerror="console.error('Logo failed to load:', this.src); this.style.display='none';">
+     <p id="business-name" class="text-amber-400 font-medium tracking-widest uppercase text-sm mb-4 pulse-soft">Regenta Resort Sakleshpur</p>
+     <h1 id="headline" class="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">How Was Your Experience?</h1>
+     <p id="subtext" class="text-slate-300 text-lg md:text-xl leading-relaxed">Your feedback helps us improve and helps others discover us. We'd be grateful if you could share your thoughts!</p>
+    </div><!-- Review Cards -->
+    <div class="flex flex-col sm:flex-row gap-6 md:gap-8 w-full max-w-2xl mb-12"><!-- Google Review Card --> <a id="google-link" href="#" target="_blank" rel="noopener noreferrer" class="review-card relative flex-1 bg-slate-800/80 backdrop-blur-sm rounded-3xl p-8 text-center cursor-pointer border border-slate-700/50 group">
+      <div class="card-glow google-glow"></div><!-- Google Icon -->
+      <div class="w-20 h-20 mx-auto mb-6 bg-white rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
+       <svg class="w-12 h-12" viewbox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" /> <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" /> <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" /> <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+       </svg>
+      </div><h2 class="font-display text-2xl font-semibold text-white mb-3">Google</h2><p class="text-slate-400 text-sm mb-4">Share on Google Reviews</p><!-- Star Rating Display -->
+      <div class="flex justify-center gap-1">
+       <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewbox="0 0 20 20">
+        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+       </svg>
+       <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewbox="0 0 20 20">
+        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+       </svg>
+       <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewbox="0 0 20 20">
+        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+       </svg>
+       <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewbox="0 0 20 20">
+        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+       </svg>
+       <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewbox="0 0 20 20">
+        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+       </svg>
+      </div></a> <!-- TripAdvisor Review Card --> <a id="tripadvisor-link" href="#" target="_blank" rel="noopener noreferrer" class="review-card relative flex-1 bg-slate-800/80 backdrop-blur-sm rounded-3xl p-8 text-center cursor-pointer border border-slate-700/50 group">
+      <div class="card-glow tripadvisor-glow"></div><!-- TripAdvisor Icon -->
+      <div class="w-20 h-20 mx-auto mb-6 bg-white rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
+       <svg class="w-14 h-14" viewbox="0 0 24 24"><circle cx="6.5" cy="13.5" r="3" fill="none" stroke="#00AF87" stroke-width="1.5" /> <circle cx="6.5" cy="13.5" r="1.2" fill="#00AF87" /> <circle cx="17.5" cy="13.5" r="3" fill="none" stroke="#00AF87" stroke-width="1.5" /> <circle cx="17.5" cy="13.5" r="1.2" fill="#00AF87" /> <path d="M3 13.5c0-2.5 1.5-4.5 3.5-5.5M21 13.5c0-2.5-1.5-4.5-3.5-5.5" stroke="#00AF87" stroke-width="1.5" fill="none" stroke-linecap="round" /> <path d="M9.5 13.5h5" stroke="#00AF87" stroke-width="1.5" stroke-linecap="round" /> <path d="M12 5l-3 3h6l-3-3z" fill="#FF9500" /> <path d="M8 8c-2 0-4 1-5 2.5M16 8c2 0 4 1 5 2.5" stroke="#00AF87" stroke-width="1.5" fill="none" stroke-linecap="round" />
+       </svg>
+      </div><h2 class="font-display text-2xl font-semibold text-white mb-3">TripAdvisor</h2><p class="text-slate-400 text-sm mb-4">Share on TripAdvisor</p><!-- Circle Rating Display -->
+      <div class="flex justify-center gap-1">
+       <div class="w-5 h-5 rounded-full bg-emerald-500"></div>
+       <div class="w-5 h-5 rounded-full bg-emerald-500"></div>
+       <div class="w-5 h-5 rounded-full bg-emerald-500"></div>
+       <div class="w-5 h-5 rounded-full bg-emerald-500"></div>
+       <div class="w-5 h-5 rounded-full bg-emerald-500"></div>
+      </div></a>
+    </div><!-- Thank You Message -->
+    <p id="thank-you" class="text-slate-500 text-center text-sm max-w-md">Thank you for taking the time to share your experience with us. Your review truly makes a difference! ✨</p>
+   </div>
+  </div>
+  <script>
+    const defaultConfig = {
+      business_name: 'Regenta Resort Sakleshpur',
+      headline: 'How Was Your Experience?',
+      subtext: "Your feedback helps us improve and helps others discover us. We'd be grateful if you could share your thoughts!",
+      thank_you_message: 'Thank you for taking the time to share your experience with us. Your review truly makes a difference! ✨',
+      google_url: 'https://g.page/r/CXV9i1zAIJxhEAE/review',
+      tripadvisor_url: 'https://www.tripadvisor.in/UserReviewEdit-g17668252-d27103615-Regenta_Resort_Sakleshpur-Hadige_Hassan_District_Karnataka.html',
+      background_color: '#0f172a',
+      card_color: '#1e293b',
+      text_color: '#f1f5f9',
+      accent_color: '#fbbf24',
+      secondary_accent: '#00AF87',
+      font_family: 'Playfair Display',
+      font_size: 16
+    };
+    
+    async function onConfigChange(config) {
+      // Update text content
+      document.getElementById('business-name').textContent = config.business_name || defaultConfig.business_name;
+      document.getElementById('headline').textContent = config.headline || defaultConfig.headline;
+      document.getElementById('subtext').textContent = config.subtext || defaultConfig.subtext;
+      document.getElementById('thank-you').textContent = config.thank_you_message || defaultConfig.thank_you_message;
+      
+      // Update links
+      document.getElementById('google-link').href = config.google_url || defaultConfig.google_url;
+      document.getElementById('tripadvisor-link').href = config.tripadvisor_url || defaultConfig.tripadvisor_url;
+      
+      // Update colors
+      const bgColor = config.background_color || defaultConfig.background_color;
+      const cardColor = config.card_color || defaultConfig.card_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+      const accentColor = config.accent_color || defaultConfig.accent_color;
+      const secondaryAccent = config.secondary_accent || defaultConfig.secondary_accent;
+      
+      const wrapper = document.getElementById('app-wrapper');
+      wrapper.style.background = `linear-gradient(135deg, ${bgColor} 0%, ${cardColor} 50%, ${bgColor} 100%)`;
+      
+      document.getElementById('headline').style.color = textColor;
+      document.getElementById('subtext').style.color = textColor + 'cc';
+      document.getElementById('business-name').style.color = accentColor;
+      document.getElementById('thank-you').style.color = textColor + '88';
+      
+      // Update fonts
+      const fontFamily = config.font_family || defaultConfig.font_family;
+      const fontSize = config.font_size || defaultConfig.font_size;
+      const baseFontStack = 'Source Sans 3, sans-serif';
+      
+      document.getElementById('headline').style.fontFamily = `${fontFamily}, serif`;
+      document.querySelectorAll('.review-card h2').forEach(el => {
+        el.style.fontFamily = `${fontFamily}, serif`;
+      });
+      
+      document.getElementById('subtext').style.fontSize = `${fontSize * 1.125}px`;
+      document.getElementById('thank-you').style.fontSize = `${fontSize * 0.875}px`;
+    }
+    
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [
+          {
+            get: () => config.background_color || defaultConfig.background_color,
+            set: (value) => { config.background_color = value; window.elementSdk.setConfig({ background_color: value }); }
+          },
+          {
+            get: () => config.card_color || defaultConfig.card_color,
+            set: (value) => { config.card_color = value; window.elementSdk.setConfig({ card_color: value }); }
+          },
+          {
+            get: () => config.text_color || defaultConfig.text_color,
+            set: (value) => { config.text_color = value; window.elementSdk.setConfig({ text_color: value }); }
+          },
+          {
+            get: () => config.accent_color || defaultConfig.accent_color,
+            set: (value) => { config.accent_color = value; window.elementSdk.setConfig({ accent_color: value }); }
+          },
+          {
+            get: () => config.secondary_accent || defaultConfig.secondary_accent,
+            set: (value) => { config.secondary_accent = value; window.elementSdk.setConfig({ secondary_accent: value }); }
+          }
+        ],
+        borderables: [],
+        fontEditable: {
+          get: () => config.font_family || defaultConfig.font_family,
+          set: (value) => { config.font_family = value; window.elementSdk.setConfig({ font_family: value }); }
+        },
+        fontSizeable: {
+          get: () => config.font_size || defaultConfig.font_size,
+          set: (value) => { config.font_size = value; window.elementSdk.setConfig({ font_size: value }); }
+        }
+      };
+    }
+    
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ['business_name', config.business_name || defaultConfig.business_name],
+        ['headline', config.headline || defaultConfig.headline],
+        ['subtext', config.subtext || defaultConfig.subtext],
+        ['thank_you_message', config.thank_you_message || defaultConfig.thank_you_message],
+        ['google_url', config.google_url || defaultConfig.google_url],
+        ['tripadvisor_url', config.tripadvisor_url || defaultConfig.tripadvisor_url]
+      ]);
+    }
+    
+    // Initialize SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d5fcd35644a693a',t:'MTc3MjQ0ODIxOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
